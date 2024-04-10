@@ -1,0 +1,13 @@
+
+server:
+  port: 9001
+
+spring:
+  application:
+    name: tree_test
+  #数据库配置
+  datasource:
+    url: jdbc:mysql://10.100.188.62:3307/test?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
