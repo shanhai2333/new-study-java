@@ -1,5 +1,6 @@
 package com.tree.treetest.controller;
 
+import com.tree.common.response.Result;
 import com.tree.treetest.domain.TreeTable;
 import com.tree.treetest.service.TreeService;
 import lombok.RequiredArgsConstructor;
@@ -17,19 +18,22 @@ public class TreeController {
 
     private final TreeService treeService;
     @RequestMapping("/getAll")
-    public List<TreeTable> getAll(){
-        return treeService.getAll();
+    public Result<List<TreeTable>> getAll(){
+        return Result.ok(treeService.getAll());
     }
     @RequestMapping("/insert")
-    public void insert(){
+    public Result<Void> insert(){
 
+        return Result.ok();
     }
     @RequestMapping("/del")
-    public void del(){
+    public Result<Void> del(){
 
+        return Result.ok();
     }
     @RequestMapping("/update")
-    public void update(){
+    public Result<Void> update(){
 
+        return Result.ok();
     }
 }
