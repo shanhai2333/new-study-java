@@ -29,7 +29,9 @@ public class TreeServiceImpl implements TreeService {
         // 过滤非顶层
         List<TreeTable> child = treeTableList.stream().filter(treeTable -> !ObjectUtils.isEmpty(treeTable.getParentId())).toList();
 
+        // 定义返回结果
         List<TreeTable> tree = new ArrayList<>();
+
         // 判断非顶层是否为空
         if (!CollectionUtils.isEmpty(child)) {
             // 遍历非顶层
