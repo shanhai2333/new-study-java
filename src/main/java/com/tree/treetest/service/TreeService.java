@@ -1,6 +1,6 @@
-package com.tree.tree_test.service;
+package com.tree.treetest.service;
 
-import com.tree.tree_test.domain.TreeTable;
+import com.tree.treetest.domain.TreeTable;
 
 import java.util.List;
 

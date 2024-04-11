@@ -1,7 +1,7 @@
-package com.tree.tree_test.mapper;
+package com.tree.treetest.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.tree.tree_test.domain.TreeTable;
+import com.tree.treetest.domain.TreeTable;
 
 public interface TreeTableMapper extends BaseMapper<TreeTable> {
 }

@@ -1,4 +1,4 @@
-package com.tree.tree_test;
+package com.tree.treetest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

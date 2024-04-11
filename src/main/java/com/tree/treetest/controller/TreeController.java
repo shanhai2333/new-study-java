@@ -1,7 +1,7 @@
-package com.tree.tree_test.controller;
+package com.tree.treetest.controller;
 
-import com.tree.tree_test.domain.TreeTable;
-import com.tree.tree_test.service.TreeService;
+import com.tree.treetest.domain.TreeTable;
+import com.tree.treetest.service.TreeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

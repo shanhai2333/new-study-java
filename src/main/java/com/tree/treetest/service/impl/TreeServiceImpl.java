@@ -1,8 +1,8 @@
-package com.tree.tree_test.service.impl;
+package com.tree.treetest.service.impl;
 
-import com.tree.tree_test.domain.TreeTable;
-import com.tree.tree_test.mapper.TreeTableMapper;
-import com.tree.tree_test.service.TreeService;
+import com.tree.treetest.domain.TreeTable;
+import com.tree.treetest.mapper.TreeTableMapper;
+import com.tree.treetest.service.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

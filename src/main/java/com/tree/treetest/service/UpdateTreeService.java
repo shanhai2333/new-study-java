@@ -1,4 +1,4 @@
-package com.tree.tree_test.service;
+package com.tree.treetest.service;
 
 import com.alibaba.fastjson2.JSONObject;
 import org.springframework.stereotype.Service;

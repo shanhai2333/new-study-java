@@ -1,4 +1,4 @@
-package com.tree.tree_test.domain;
+package com.tree.treetest.domain;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableField;

@@ -1,4 +1,4 @@
-package com.tree.tree_test;
+package com.tree.treetest;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
