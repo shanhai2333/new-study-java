@@ -1,6 +1,7 @@
 package com.tree.treetest.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.tree.common.response.Result;
 import com.tree.treetest.domain.TreeTable;
 import com.tree.treetest.mapper.TreeTableMapper;
 import com.tree.treetest.service.UpdateTreeService;
@@ -8,14 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UpdateTreeTreeServiceImpl implements UpdateTreeService {
+public class UpdateTreeServiceImpl implements UpdateTreeService {
 
     @Autowired
     private TreeTableMapper treeTableMapper;
     @Override
-    public String UpdateTree(Integer id , JSONObject jsonObject) {
+    public Result<Object> Update(Integer id , JSONObject jsonObject , String name) {
+
         TreeTable treeTable = new TreeTable().selectById(id);
         treeTable.setDate(jsonObject);
-        return null;
+        treeTable.setLabel(name);
+        int result = treeTableMapper.updateById(treeTable);
+        if (result==1){
+            return Result.ok();
+        }else {
+            return Result.failure("插入失败请联系管理员");
+        }
     }
 }
