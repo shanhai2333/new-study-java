@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -102,52 +100,37 @@ public class TreeServiceImpl implements TreeService {
 
     @Override
     public List<TreeTable> getByName(String name) {
+        List<TreeTable> all = new TreeTable().selectAll();
+        Map<Integer, TreeTable> map = all.stream().collect(Collectors.toMap(TreeTable::getId, treeTable -> treeTable));
         List<TreeTable> treeTableList = new TreeTable().selectList(Wrappers.<TreeTable>lambdaQuery().like(TreeTable::getLabel, name));
-        // 过滤最顶层菜单
-        List<TreeTable> top = treeTableList.stream().filter(treeTable -> ObjectUtils.isEmpty(treeTable.getParentId())).toList();
-        // 过滤非顶层
-        List<TreeTable> child = treeTableList.stream().filter(treeTable -> !ObjectUtils.isEmpty(treeTable.getParentId())).toList();
-
-        // 查询非顶级菜单的父级菜单
-        if (!CollectionUtils.isEmpty(child)) {
-            List<TreeTable> parentList = new TreeTable().selectList(Wrappers.<TreeTable>lambdaQuery()
-                    .in(TreeTable::getId, child.stream().map(TreeTable::getParentId).toList()));
-            List<TreeTable> parentVo = parentList.stream().filter(treeTable -> ObjectUtils.isEmpty(treeTable.getParentId())).toList();
-            // 将父级菜单添加到菜单集合中
-            if (!CollectionUtils.isEmpty(parentVo)) {
-                top = new ArrayList<>(top);
-                top.addAll(parentVo);
-                List<TreeTable> childMap = parentList.stream().filter(treeTable -> !ObjectUtils.isEmpty(treeTable.getParentId())).toList();
-                if (!CollectionUtils.isEmpty(childMap)) {
-                    List<TreeTable> parentList2 = new TreeTable().selectList(Wrappers.<TreeTable>lambdaQuery()
-                            .in(TreeTable::getId, childMap.stream().map(TreeTable::getParentId).toList()));
-                    List<TreeTable> parentVo2 = parentList2.stream().toList();
-                    top.addAll(parentVo2);
-                }
+        List<TreeTable> tree = new ArrayList<>();
+        Set<Integer> ids = new HashSet<>();
+        for (TreeTable treeTable : treeTableList) {
+            TreeTable result = getTree(map, treeTable);
+            // 统计顶级菜单的id
+            if (ObjectUtils.isEmpty(result.getParentId())) {
+                ids.add(result.getId());
             }
         }
-        // 顶级菜单去重
-        top = top.stream().distinct().toList();
-        // 子级菜单去重
-        child = child.stream().distinct().toList();
-        // 递归
-        for (TreeTable vo : child) {
-            getMenuChildren(child, vo);
+        // 遍历顶级菜单
+        for (Integer id : ids) {
+            tree.add(map.get(id));
         }
 
-        for (TreeTable vo : top) {
-            getMenuChildren(child, vo);
-        }
-        return top;
+        return tree;
     }
 
-    private void getMenuChildren(List<TreeTable> child, TreeTable vo) {
-        List<TreeTable> children = child.stream().filter(treeTable -> treeTable.getParentId().equals(vo.getId())).toList();
-        if (!CollectionUtils.isEmpty(children)) {
-            vo.setChildren(children);
-            for (TreeTable child1 : children) {
-                getMenuChildren(child, child1);
+    private TreeTable getTree(Map<Integer, TreeTable> map, TreeTable treeTable) {
+        TreeTable parent = map.get(treeTable.getParentId());
+        if (ObjectUtils.isEmpty(parent)) {
+            return treeTable;
+        } else {
+            if (ObjectUtils.isEmpty(parent.getChildren())) {
+                parent.setChildren(new ArrayList<>());
             }
+            parent.getChildren().add(treeTable);
+            return getTree(map, parent);
         }
     }
+
 }
