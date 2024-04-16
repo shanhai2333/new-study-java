@@ -114,13 +114,16 @@ public class TreeServiceImpl implements TreeService {
                     .in(TreeTable::getId, child.stream().map(TreeTable::getParentId).toList()));
             List<TreeTable> parentVo = parentList.stream().filter(treeTable -> ObjectUtils.isEmpty(treeTable.getParentId())).toList();
             // 将父级菜单添加到菜单集合中
-            top.addAll(parentVo);
-            List<TreeTable> childMap = parentList.stream().filter(treeTable -> !ObjectUtils.isEmpty(treeTable.getParentId())).toList();
-            if (!CollectionUtils.isEmpty(childMap)) {
-                List<TreeTable> parentList2 = new TreeTable().selectList(Wrappers.<TreeTable>lambdaQuery()
-                        .in(TreeTable::getId, childMap.stream().map(TreeTable::getParentId).toList()));
-                List<TreeTable> parentVo2 = parentList2.stream().toList();
-                top.addAll(parentVo2);
+            if (!CollectionUtils.isEmpty(parentVo)) {
+                top = new ArrayList<>(top);
+                top.addAll(parentVo);
+                List<TreeTable> childMap = parentList.stream().filter(treeTable -> !ObjectUtils.isEmpty(treeTable.getParentId())).toList();
+                if (!CollectionUtils.isEmpty(childMap)) {
+                    List<TreeTable> parentList2 = new TreeTable().selectList(Wrappers.<TreeTable>lambdaQuery()
+                            .in(TreeTable::getId, childMap.stream().map(TreeTable::getParentId).toList()));
+                    List<TreeTable> parentVo2 = parentList2.stream().toList();
+                    top.addAll(parentVo2);
+                }
             }
         }
         // 顶级菜单去重
