@@ -9,8 +9,7 @@ import com.tree.treetest.service.TreeService;
 import com.tree.treetest.service.UpdateTreeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,21 +23,21 @@ public class TreeController {
     private final AddTreeService addTreeService;
     private final DeleteTreeService deleteTreeService;
     private final UpdateTreeService updateTreeService;
-    @RequestMapping("/getAll")
+    @GetMapping("/getAll")
     public Result<List<TreeTable>> getAll(){
         return Result.ok(treeService.getAll());
     }
-    @RequestMapping("/insert")
+    @PostMapping("/insert")
     public Result<Void> insert(Integer id , JSONObject jsonObject , String name , String parentId){
 
         return Result.ok(String.valueOf(addTreeService.Add(id,jsonObject,name,parentId)));
     }
-    @RequestMapping("/del")
+    @DeleteMapping("/del")
     public Result<Void> del(Integer id){
 
         return Result.ok(String.valueOf(deleteTreeService.Delete(id)));
     }
-    @RequestMapping("/update")
+    @PutMapping("/update")
     public Result<Void> update(Integer id , JSONObject jsonObject , String name){
 
         return Result.ok(String.valueOf(updateTreeService.Update(id,jsonObject,name)));
