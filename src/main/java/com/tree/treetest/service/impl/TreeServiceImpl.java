@@ -52,7 +52,7 @@ public class TreeServiceImpl implements TreeService {
         if (!CollectionUtils.isEmpty(top)) {
             for (TreeTable treeTable : top) {
                 TreeTable parent = map.get(treeTable.getId());
-                if (ObjectUtils.isEmpty(parent)) {
+                if (ObjectUtils.isEmpty(parent.getParentId())) {
                     tree.add(parent);
                 }
             }
