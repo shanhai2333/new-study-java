@@ -3,6 +3,9 @@ package com.tree.treetest.controller;
 import com.alibaba.fastjson2.JSONObject;
 import com.tree.common.response.Result;
 import com.tree.treetest.domain.TreeTable;
+import com.tree.treetest.dto.GetByNameDTO;
+import com.tree.treetest.dto.InsertDTO;
+import com.tree.treetest.dto.UpDateDTO;
 import com.tree.treetest.service.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,23 +23,22 @@ public class TreeController {
         return Result.ok(treeService.getData());
     }
 
-    @GetMapping("/getByName")
-    public Result<List<TreeTable>> getByName(String name){
-        return Result.ok(treeService.getByName(name));
+    @PostMapping("/getByName")
+    public Result<List<TreeTable>> getByName(GetByNameDTO dto){
+        return Result.ok(treeService.getByName(dto.getName()));
     }
-    @GetMapping("/insert")
-    public Result<Void> insert(Integer id , JSONObject jsonObject , String name , String parentId){
 
-        return Result.ok(String.valueOf(treeService.addData(id,jsonObject,name,parentId)));
+    @PostMapping("/insert")
+    public Result<Object> insert(InsertDTO dto){
+        return Result.ok(treeService.addData(dto));
     }
-    @GetMapping("/del")
-    public Result<Void> del(Integer id){
-
-        return Result.ok(String.valueOf(treeService.deleteData(id)));
+    @PostMapping("/del")
+    public Result<Object> del(Integer id){
+        return Result.ok(treeService.deleteData(id));
     }
-    @GetMapping("/update")
-    public Result<Void> update(Integer id , JSONObject jsonObject , String name){
+    @PostMapping("/update")
+    public Result<Object> update(UpDateDTO dto){
 
-        return Result.ok(String.valueOf(treeService.updateData(id,jsonObject,name)));
+        return Result.ok(treeService.updateData(dto));
     }
 }

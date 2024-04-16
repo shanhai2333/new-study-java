@@ -4,6 +4,8 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tree.common.response.Result;
 import com.tree.treetest.domain.TreeTable;
+import com.tree.treetest.dto.InsertDTO;
+import com.tree.treetest.dto.UpDateDTO;
 import com.tree.treetest.mapper.TreeTableMapper;
 import com.tree.treetest.service.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,12 +61,11 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public Result<Object> addData(Integer id , JSONObject jsonObject , String name , String parentId) {
+    public Result<Object> addData(InsertDTO dto) {
         TreeTable treeTable = new TreeTable();
-        treeTable.setId(id);
-        treeTable.setDate(jsonObject);
-        treeTable.setLabel(name);
-        treeTable.setLabel(parentId);
+        treeTable.setDate(dto.getDate());
+        treeTable.setLabel(dto.getName());
+        treeTable.setParentId(dto.getParentId());
         int result = treeTableMapper.insert(treeTable);
         if (result==1){
             return Result.ok();
@@ -76,6 +77,9 @@ public class TreeServiceImpl implements TreeService {
     @Override
     public Result<Object> deleteData(Integer id) {
         TreeTable treeTable = new TreeTable().selectById(id);
+        if (ObjectUtils.isEmpty(treeTable)){
+            return Result.failure("没有找到该数据");
+        }
         int result = treeTableMapper.deleteById(treeTable);
         if (result==1){
             return Result.ok();
@@ -85,11 +89,14 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public Result<Object> updateData(Integer id , JSONObject jsonObject , String name) {
+    public Result<Object> updateData(UpDateDTO dto) {
 
-        TreeTable treeTable = new TreeTable().selectById(id);
-        treeTable.setDate(jsonObject);
-        treeTable.setLabel(name);
+        TreeTable treeTable = new TreeTable().selectById(dto.getId());
+        if (ObjectUtils.isEmpty(treeTable)){
+            return Result.failure("没有找到该数据");
+        }
+        treeTable.setDate(dto.getDate());
+        treeTable.setLabel(dto.getName());
         int result = treeTableMapper.updateById(treeTable);
         if (result==1){
             return Result.ok();
