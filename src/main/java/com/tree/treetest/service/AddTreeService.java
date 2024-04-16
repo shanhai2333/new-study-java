@@ -5,6 +5,6 @@ import com.tree.common.response.Result;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface UpdateTreeService {
-    Result<Object> Update(Integer id , JSONObject jsonObject , String name);
+public interface AddTreeService {
+    Result<Object> Add(Integer id , JSONObject jsonObject , String name , String parentId);
 }
