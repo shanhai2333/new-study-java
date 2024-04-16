@@ -17,8 +17,12 @@ public class TreeController {
     private TreeService treeService;
     @GetMapping("/getAll")
     public Result<List<TreeTable>> getAll(){
-        List<TreeTable> treeTables = treeService.getData();
-        return Result.ok(treeTables);
+        return Result.ok(treeService.getData());
+    }
+
+    @GetMapping("/getByName")
+    public Result<List<TreeTable>> getByName(String name){
+        return Result.ok(treeService.getByName(name));
     }
     @GetMapping("/insert")
     public Result<Void> insert(Integer id , JSONObject jsonObject , String name , String parentId){

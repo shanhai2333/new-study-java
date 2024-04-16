@@ -14,4 +14,6 @@ public interface TreeService {
     Result<Object> deleteData(Integer id);
 
     Result<Object> updateData(Integer id , JSONObject jsonObject , String name);
+
+    List<TreeTable> getByName(String name);
 }

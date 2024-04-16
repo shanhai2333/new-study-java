@@ -1,6 +1,7 @@
 package com.tree.treetest.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tree.common.response.Result;
 import com.tree.treetest.domain.TreeTable;
 import com.tree.treetest.mapper.TreeTableMapper;
@@ -51,7 +52,7 @@ public class TreeServiceImpl implements TreeService {
         if (!CollectionUtils.isEmpty(top)) {
             for (TreeTable treeTable : top) {
                 TreeTable parent = map.get(treeTable.getId());
-                if (!ObjectUtils.isEmpty(parent)) {
+                if (ObjectUtils.isEmpty(parent)) {
                     tree.add(parent);
                 }
             }
@@ -97,5 +98,50 @@ public class TreeServiceImpl implements TreeService {
         }else {
             return Result.failure("插入失败请联系管理员");
         }
+    }
+
+    @Override
+    public List<TreeTable> getByName(String name) {
+        List<TreeTable> treeTableList = new TreeTable().selectAll();
+        Map<Integer,TreeTable> map = treeTableList.stream().collect(Collectors.toMap(TreeTable::getId, treeTable -> treeTable));
+        // 过滤最顶层菜单
+        List<TreeTable> top = treeTableList.stream().filter(treeTable -> ObjectUtils.isEmpty(treeTable.getParentId())).toList();
+        // 过滤非顶层
+        List<TreeTable> getByName = new TreeTable().selectList(Wrappers.<TreeTable>lambdaQuery().like(TreeTable::getLabel, name));
+        // 过滤最顶层菜单
+        List<TreeTable> getByNameTop = getByName.stream().filter(treeTable -> ObjectUtils.isEmpty(treeTable.getParentId())).toList();
+        // 过滤非顶层
+        List<TreeTable> getByNameTopChild = getByName.stream().filter(treeTable -> !ObjectUtils.isEmpty(treeTable.getParentId())).toList();
+        // 定义返回结果
+        List<TreeTable> tree = new ArrayList<>();
+        if (CollectionUtils.isEmpty(getByName)){
+            return tree;
+        } else {
+            // 遍历非顶层
+            for (TreeTable treeTable : getByNameTopChild) {
+                TreeTable parent = map.get(treeTable.getParentId());
+                if (!ObjectUtils.isEmpty(parent)) {
+                    if (ObjectUtils.isEmpty(parent.getChildren())) {
+                        parent.setChildren(new ArrayList<>());
+                    }
+                    parent.getChildren().add(treeTable);
+                }
+            }
+        }
+        // 遍历顶层
+        if (!CollectionUtils.isEmpty(top)) {
+            for (TreeTable treeTable : top) {
+                // 如果在搜索结果顶层菜单中，直接添加
+                if (getByNameTop.contains(treeTable)){
+                    tree.add(treeTable);
+                } else {
+                    TreeTable result = map.get(treeTable.getId());
+                    if (!ObjectUtils.isEmpty(result.getChildren())) {
+                        tree.add(result);
+                    }
+                }
+            }
+        }
+        return tree;
     }
 }
