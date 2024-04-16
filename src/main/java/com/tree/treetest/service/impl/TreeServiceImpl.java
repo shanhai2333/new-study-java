@@ -102,46 +102,49 @@ public class TreeServiceImpl implements TreeService {
 
     @Override
     public List<TreeTable> getByName(String name) {
-        List<TreeTable> treeTableList = new TreeTable().selectAll();
-        Map<Integer,TreeTable> map = treeTableList.stream().collect(Collectors.toMap(TreeTable::getId, treeTable -> treeTable));
+        List<TreeTable> treeTableList = new TreeTable().selectList(Wrappers.<TreeTable>lambdaQuery().like(TreeTable::getLabel, name));
         // 过滤最顶层菜单
         List<TreeTable> top = treeTableList.stream().filter(treeTable -> ObjectUtils.isEmpty(treeTable.getParentId())).toList();
         // 过滤非顶层
-        List<TreeTable> getByName = new TreeTable().selectList(Wrappers.<TreeTable>lambdaQuery().like(TreeTable::getLabel, name));
-        // 过滤最顶层菜单
-        List<TreeTable> getByNameTop = getByName.stream().filter(treeTable -> ObjectUtils.isEmpty(treeTable.getParentId())).toList();
-        // 过滤非顶层
-        List<TreeTable> getByNameTopChild = getByName.stream().filter(treeTable -> !ObjectUtils.isEmpty(treeTable.getParentId())).toList();
-        // 定义返回结果
-        List<TreeTable> tree = new ArrayList<>();
-        if (CollectionUtils.isEmpty(getByName)){
-            return tree;
-        } else {
-            // 遍历非顶层
-            for (TreeTable treeTable : getByNameTopChild) {
-                TreeTable parent = map.get(treeTable.getParentId());
-                if (!ObjectUtils.isEmpty(parent)) {
-                    if (ObjectUtils.isEmpty(parent.getChildren())) {
-                        parent.setChildren(new ArrayList<>());
-                    }
-                    parent.getChildren().add(treeTable);
-                }
+        List<TreeTable> child = treeTableList.stream().filter(treeTable -> !ObjectUtils.isEmpty(treeTable.getParentId())).toList();
+
+        // 查询非顶级菜单的父级菜单
+        if (!CollectionUtils.isEmpty(child)) {
+            List<TreeTable> parentList = new TreeTable().selectList(Wrappers.<TreeTable>lambdaQuery()
+                    .in(TreeTable::getId, child.stream().map(TreeTable::getParentId).toList()));
+            List<TreeTable> parentVo = parentList.stream().filter(treeTable -> ObjectUtils.isEmpty(treeTable.getParentId())).toList();
+            // 将父级菜单添加到菜单集合中
+            top.addAll(parentVo);
+            List<TreeTable> childMap = parentList.stream().filter(treeTable -> !ObjectUtils.isEmpty(treeTable.getParentId())).toList();
+            if (!CollectionUtils.isEmpty(childMap)) {
+                List<TreeTable> parentList2 = new TreeTable().selectList(Wrappers.<TreeTable>lambdaQuery()
+                        .in(TreeTable::getId, childMap.stream().map(TreeTable::getParentId).toList()));
+                List<TreeTable> parentVo2 = parentList2.stream().toList();
+                top.addAll(parentVo2);
             }
         }
-        // 遍历顶层
-        if (!CollectionUtils.isEmpty(top)) {
-            for (TreeTable treeTable : top) {
-                // 如果在搜索结果顶层菜单中，直接添加
-                if (getByNameTop.contains(treeTable)){
-                    tree.add(treeTable);
-                } else {
-                    TreeTable result = map.get(treeTable.getId());
-                    if (!ObjectUtils.isEmpty(result.getChildren())) {
-                        tree.add(result);
-                    }
-                }
+        // 顶级菜单去重
+        top = top.stream().distinct().toList();
+        // 子级菜单去重
+        child = child.stream().distinct().toList();
+        // 递归
+        for (TreeTable vo : child) {
+            getMenuChildren(child, vo);
+        }
+
+        for (TreeTable vo : top) {
+            getMenuChildren(child, vo);
+        }
+        return top;
+    }
+
+    private void getMenuChildren(List<TreeTable> child, TreeTable vo) {
+        List<TreeTable> children = child.stream().filter(treeTable -> treeTable.getParentId().equals(vo.getId())).toList();
+        if (!CollectionUtils.isEmpty(children)) {
+            vo.setChildren(children);
+            for (TreeTable child1 : children) {
+                getMenuChildren(child, child1);
             }
         }
-        return tree;
     }
 }
