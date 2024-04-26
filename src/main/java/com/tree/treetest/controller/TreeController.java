@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tree")
+@CrossOrigin
 public class TreeController {
 
     @Autowired

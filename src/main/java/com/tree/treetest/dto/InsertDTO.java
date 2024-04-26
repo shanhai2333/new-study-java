@@ -16,5 +16,5 @@ public class InsertDTO {
 
     private Integer parentId;
 
-    private JSONObject date;
+    private JSONObject data;
 }

@@ -12,14 +12,14 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName(value = "tree")
+@TableName(value = "treetable")
 public class TreeTable extends Model<TreeTable> {
     @TableId("id")
     private Integer id;
     @TableField("label")
     private String label;
-    @TableField("date")
-    private JSONObject date;
+    @TableField("data")
+    private JSONObject data;
     @TableField("parent_id")
     private Integer parentId;
     @TableField(exist = false)

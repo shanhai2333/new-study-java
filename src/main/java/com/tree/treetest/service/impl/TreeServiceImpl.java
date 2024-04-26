@@ -63,7 +63,7 @@ public class TreeServiceImpl implements TreeService {
     @Override
     public Result<Object> addData(InsertDTO dto) {
         TreeTable treeTable = new TreeTable();
-        treeTable.setDate(dto.getDate());
+        treeTable.setData(dto.getData());
         treeTable.setLabel(dto.getName());
         treeTable.setParentId(dto.getParentId());
         int result = treeTableMapper.insert(treeTable);
@@ -95,7 +95,7 @@ public class TreeServiceImpl implements TreeService {
         if (ObjectUtils.isEmpty(treeTable)){
             return Result.failure("没有找到该数据");
         }
-        treeTable.setDate(dto.getDate());
+        treeTable.setData(dto.getData());
         treeTable.setLabel(dto.getName());
         int result = treeTableMapper.updateById(treeTable);
         if (result==1){
