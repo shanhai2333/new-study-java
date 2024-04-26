@@ -25,12 +25,12 @@ public class TreeController {
     }
 
     @PostMapping("/getByName")
-    public Result<List<TreeTable>> getByName(GetByNameDTO dto){
+    public Result<List<TreeTable>> getByName(@RequestBody GetByNameDTO dto){
         return Result.ok(treeService.getByName(dto.getName()));
     }
 
     @PostMapping("/insert")
-    public Result<Object> insert(InsertDTO dto){
+    public Result<Object> insert(@RequestBody InsertDTO dto){
         return Result.ok(treeService.addData(dto));
     }
     @PostMapping("/del")
@@ -38,7 +38,7 @@ public class TreeController {
         return Result.ok(treeService.deleteData(id));
     }
     @PostMapping("/update")
-    public Result<Object> update(UpDateDTO dto){
+    public Result<Object> update(@RequestBody UpDateDTO dto){
 
         return Result.ok(treeService.updateData(dto));
     }
