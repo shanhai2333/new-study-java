@@ -34,7 +34,7 @@ public class TreeController {
         return Result.ok(treeService.addData(dto));
     }
     @PostMapping("/del")
-    public Result<Object> del(Integer id){
+    public Result<Object> del(@RequestBody Integer id){
         return Result.ok(treeService.deleteData(id));
     }
     @PostMapping("/update")

@@ -1,5 +1,6 @@
 package com.tree.treetest.dto;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,5 +17,5 @@ public class InsertDTO {
 
     private Integer parentId;
 
-    private JSONObject data;
+    private JSONArray data;
 }
