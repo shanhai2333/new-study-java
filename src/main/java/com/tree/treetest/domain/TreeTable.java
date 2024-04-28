@@ -21,8 +21,7 @@ public class TreeTable extends Model<TreeTable> {
     @TableField("label")
     private String label;
     @TableField(typeHandler = FastjsonTypeHandler.class)
-
-    private JSONArray data;
+    private JSONArray data_json;
     @TableField("parent_id")
     private Integer parentId;
     @TableField(exist = false)

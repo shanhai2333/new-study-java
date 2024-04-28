@@ -17,6 +17,6 @@ import lombok.NoArgsConstructor;
 public class UpDateDTO extends InsertDTO{
 
     private Integer id;
-    private JSONArray data;
+    private JSONArray data_json;
     private String name;
 }

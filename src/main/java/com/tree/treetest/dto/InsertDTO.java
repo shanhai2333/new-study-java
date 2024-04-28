@@ -17,5 +17,5 @@ public class InsertDTO {
 
     private Integer parentId;
 
-    private JSONArray data;
+    private JSONArray data_json;
 }

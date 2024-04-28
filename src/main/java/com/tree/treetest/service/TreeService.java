@@ -14,7 +14,7 @@ public interface TreeService {
     Result<Object> addData(InsertDTO dto);
 
     Result<Object> deleteData(Integer id);
-
+    Result<Object> selectData(Integer id);
     Result<Object> updateData(UpDateDTO dto);
 
     List<TreeTable> getByName(String name);

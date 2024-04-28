@@ -37,6 +37,10 @@ public class TreeController {
     public Result<Object> del(@RequestBody Integer id){
         return Result.ok(treeService.deleteData(id));
     }
+    @PostMapping("/getIdData")
+    public Result<Object> selectData(@RequestBody Integer id){
+        return Result.ok(treeService.selectData(id));
+    }
     @PostMapping("/update")
     public Result<Object> update(@RequestBody UpDateDTO dto){
 
